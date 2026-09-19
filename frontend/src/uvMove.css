@@ -1,0 +1,748 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
+/* ── Reset mínimo ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Shell del prototipo ── */
+.uvm-shell {
+  min-height: 100vh;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-phone {
+  position: relative;
+  width: 390px;
+  height: 844px;
+  background: #ffffff;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+/* ── Barra de estado ── */
+.uvm-statusbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px 4px;
+  background: #1a4fa0;
+}
+.uvm-statusbar__time {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-statusbar__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+  font-size: 12px;
+}
+.uvm-statusbar__battery { font-weight: 700; }
+
+/* ── Contenedor de pantalla ── */
+.uvm-screen-wrap {
+  position: absolute;
+  inset: 0;
+  padding-top: 28px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Etiqueta de pantalla (badge inferior) ── */
+.uvm-badge {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a4fa0;
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  opacity: 0.82;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ================================================================
+   COMPONENTES COMPARTIDOS
+================================================================ */
+
+/* ── Header azul ── */
+.uvm-header {
+  background: #1a4fa0;
+  padding: 48px 20px 20px;
+  flex-shrink: 0;
+}
+.uvm-header--center { text-align: center; }
+
+.uvm-header__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.uvm-header__row--left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.uvm-logo-uv {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-logo-move {
+  color: #7bb3f0;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-logo-uv--sm { font-size: 20px; }
+.uvm-logo-move--sm { font-size: 20px; }
+
+.uvm-header__title {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.uvm-icon-btn:active { opacity: 0.8; }
+
+/* ── Navegación inferior ── */
+.uvm-bottom-nav {
+  background: #ffffff;
+  border-top: 1px solid #e8eef6;
+  display: flex;
+  flex-shrink: 0;
+}
+.uvm-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0;
+  gap: 4px;
+}
+.uvm-nav-item__label {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-nav-item--active .uvm-nav-item__label { color: #1a4fa0; }
+.uvm-nav-item--inactive .uvm-nav-item__label { color: #94a3b8; }
+
+/* ── Chip de estado disponible ── */
+.uvm-status-dot {
+  display: inline-block;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+.uvm-status-dot--green { background: #16a34a; }
+.uvm-status-dot--red   { background: #dc2626; }
+.uvm-status-dot--sm    { width: 8px; height: 8px; }
+.uvm-status-dot--md    { width: 10px; height: 10px; }
+
+.uvm-status-label--green {
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.02em;
+}
+.uvm-status-label--red {
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-status-label--orange {
+  color: #ea580c;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ── Botón primario ── */
+.uvm-btn-primary {
+  width: 100%;
+  background: #1a4fa0;
+  color: #ffffff;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: 16px;
+  padding: 16px 0;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+  transition: opacity 0.15s;
+}
+.uvm-btn-primary:active { opacity: 0.88; }
+
+.uvm-btn-primary--lg {
+  font-size: 16px;
+  border-radius: 16px;
+  padding: 16px 0;
+}
+
+.uvm-btn-primary--card {
+  font-size: 14px;
+  border-radius: 12px;
+  padding: 12px 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* ── Botón secundario ── */
+.uvm-btn-secondary {
+  width: 100%;
+  background: #eff6ff;
+  color: #1a4fa0;
+  border: 1px solid #bfdbfe;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  border-radius: 16px;
+  padding: 16px 0;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.uvm-btn-secondary:active { opacity: 0.88; }
+
+.uvm-btn-ghost {
+  width: 100%;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: 16px;
+  padding: 16px 0;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.uvm-btn-ghost:active { opacity: 0.88; }
+
+/* ── Tarjeta blanca ── */
+.uvm-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e8eef6;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.uvm-card-divider {
+  height: 1px;
+  background: #f1f5f9;
+}
+
+/* ── Fila de info ── */
+.uvm-info-row {
+  padding: 14px 16px;
+}
+.uvm-info-row__label {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 2px;
+}
+.uvm-info-row__value {
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+  color: #1e293b;
+}
+.uvm-info-row__value--green { color: #16a34a; }
+
+/* ================================================================
+   PANTALLA 01 — EXPLORAR VEHÍCULOS
+================================================================ */
+.uvm-explore {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8fafd;
+}
+
+.uvm-explore__titles {
+  padding: 24px 20px 16px;
+}
+.uvm-explore__h1 {
+  color: #1a4fa0;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.2;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: -0.025em;
+}
+.uvm-explore__subtitle {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 4px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-search {
+  margin: 0 20px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.uvm-search__placeholder {
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-section-label {
+  padding: 0 20px 12px;
+  color: #1a4fa0;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-cards-list {
+  padding: 0 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── Tarjeta de vehículo (pantalla 01) ── */
+.uvm-vehicle-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e8eef6;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  padding: 16px;
+}
+.uvm-vehicle-card__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.uvm-vehicle-card__icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.uvm-vehicle-card__info { flex: 1; min-width: 0; }
+.uvm-vehicle-card__name {
+  color: #1a4fa0;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-vehicle-card__status-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 8px;
+}
+.uvm-vehicle-card__location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ================================================================
+   PANTALLA 02 — DETALLE Y RESERVAR
+================================================================ */
+.uvm-detail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8fafd;
+}
+.uvm-detail__body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.uvm-detail__hero {
+  margin: 20px 20px 0;
+  background: #eff6ff;
+  border-radius: 16px;
+  border: 1px solid #dbeafe;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 20px;
+}
+.uvm-detail__hero-name {
+  color: #1a4fa0;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  margin-top: 16px;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-detail__hero-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.uvm-detail__hero-status-label {
+  color: #16a34a;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-detail__info-card {
+  margin: 16px 20px 0;
+}
+
+.uvm-detail__divider {
+  margin: 16px 20px;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.uvm-detail__avail-box {
+  margin: 0 20px;
+  background: #f0fdf4;
+  border-radius: 16px;
+  border: 1px solid #bbf7d0;
+  padding: 16px;
+}
+.uvm-detail__avail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.uvm-detail__avail-label {
+  color: #16a34a;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-detail__avail-note {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-detail__cta {
+  margin: 20px 20px 24px;
+}
+
+/* ================================================================
+   PANTALLA 03 — RESERVA CONFIRMADA
+================================================================ */
+.uvm-confirmed {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8fafd;
+}
+.uvm-confirmed__body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+.uvm-confirmed__icon { margin: 32px 0 16px; }
+.uvm-confirmed__h1 {
+  color: #1a4fa0;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-confirmed__sub {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 4px;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-confirmed__res-card {
+  width: 100%;
+  margin-top: 20px;
+}
+.uvm-confirmed__res-card-header {
+  background: #eff6ff;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.uvm-confirmed__res-card-name {
+  color: #1a4fa0;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-confirmed__res-card-row {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.uvm-confirmed__res-card-loc {
+  color: #475569;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-confirmed__res-id-wrap { padding: 12px 16px; }
+.uvm-confirmed__res-id-label {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-confirmed__res-id-value {
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 2px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-timer-card {
+  width: 100%;
+  margin-top: 16px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e8eef6;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  padding: 16px;
+}
+.uvm-timer-card__label {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+  margin-bottom: 12px;
+}
+.uvm-timer-card__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.uvm-timer-card__ring-wrap {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+.uvm-timer-card__ring {
+  width: 56px;
+  height: 56px;
+  transform: rotate(-90deg);
+}
+.uvm-timer-card__ring-pct {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #16a34a;
+  font-size: 11px;
+  font-weight: 900;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-timer-card__time {
+  color: #1a4fa0;
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-timer-card__note {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-confirmed__actions {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ================================================================
+   PANTALLA 04 — VEHÍCULO NO DISPONIBLE
+================================================================ */
+.uvm-unavailable {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #f8fafd;
+}
+.uvm-unavailable__body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+.uvm-unavailable__icon { margin: 32px 0 16px; }
+.uvm-unavailable__h1 {
+  color: #ea580c;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-align: center;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-unavailable__sub {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+  text-align: center;
+  line-height: 1.5;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-unavailable__vehicle-card {
+  width: 100%;
+  margin-top: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #fed7aa;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.uvm-unavailable__vehicle-header {
+  background: #fff7ed;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.uvm-unavailable__vehicle-name {
+  color: #ea580c;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-unavailable__vehicle-divider {
+  height: 1px;
+  background: #fef3c7;
+}
+.uvm-unavailable__vehicle-status {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.uvm-unavailable__error-box {
+  width: 100%;
+  margin-top: 16px;
+  background: #fef2f2;
+  border-radius: 16px;
+  border: 1px solid #fecaca;
+  padding: 16px;
+}
+.uvm-unavailable__error-title {
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-family: 'Nunito', sans-serif;
+}
+.uvm-unavailable__error-body {
+  color: #7f1d1d;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+  font-family: 'Nunito', sans-serif;
+}
+
+.uvm-unavailable__actions {
+  width: 100%;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
