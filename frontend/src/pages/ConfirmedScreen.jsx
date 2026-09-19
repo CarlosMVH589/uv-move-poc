@@ -1,22 +1,22 @@
 import { IconCheck, IconBike, IconPin } from "../components/Icons";
 import { BottomNav } from "../components/LayoutComponents";
- 
+
 export default function ConfirmedScreen({ navigate }) {
   const circumference = 2 * Math.PI * 24;
- 
+
   return (
     <div className="uvm-confirmed">
       <header className="uvm-header uvm-header--center">
         <span className="uvm-logo-uv">UV</span>
         <span className="uvm-logo-move"> MOVE</span>
       </header>
- 
+
       <div className="uvm-confirmed__body">
         <div className="uvm-confirmed__icon"><IconCheck /></div>
- 
+
         <h1 className="uvm-confirmed__h1">¡RESERVA CONFIRMADA!</h1>
         <p className="uvm-confirmed__sub">Tu vehículo está reservado</p>
- 
+
         <div className="uvm-card uvm-confirmed__res-card">
           <div className="uvm-confirmed__res-card-header">
             <IconBike size={32} color="#1a4fa0" />
@@ -38,9 +38,9 @@ export default function ConfirmedScreen({ navigate }) {
             <p className="uvm-confirmed__res-id-value">#R0254</p>
           </div>
         </div>
- 
+
         <div className="uvm-timer-card">
-          <p className="uvm-timer-card__label">Tiempo para iniciar</p>
+          <p className="uvm-timer-card__label">TIEMPO PARA INICIAR</p>
           <div className="uvm-timer-card__row">
             <div className="uvm-timer-card__ring-wrap">
               <svg viewBox="0 0 56 56" className="uvm-timer-card__ring">
@@ -61,13 +61,13 @@ export default function ConfirmedScreen({ navigate }) {
             </div>
           </div>
         </div>
- 
+
         <div className="uvm-confirmed__actions">
           <button className="uvm-btn-secondary" onClick={() => navigate("explore")}>VER MI RESERVA</button>
           <button className="uvm-btn-primary" onClick={() => navigate("explore")}>VOLVER AL INICIO</button>
         </div>
       </div>
- 
+
       <BottomNav active="reservas" navigate={navigate} />
     </div>
   );
