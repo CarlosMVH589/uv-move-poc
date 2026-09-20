@@ -1,20 +1,20 @@
 import { useState } from "react";
 import ExploreScreen from "./ExploreScreen";
 import DetailScreen from "./DetailScreen";
-import ScooterDetailScreen from "./ScooterDetailScreen";
 import ConfirmedScreen from "./ConfirmedScreen";
 import UnavailableScreen from "./UnavailableScreen";
-import "../uvmove.css";
+import "../uvMove.css";
  
-export default function UVMove() {
+export default function UVMove({ session }) {
   const [screen, setScreen] = useState("explore");
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [reservation, setReservation] = useState(null);
  
   const screenLabel = {
     explore: "01 – Explorar vehículos",
-    detail: "02 – Detalle y reservar (Bicicleta)",
-    "detail-scooter": "02 – Detalle y reservar (Scooter)",
-    confirmed: "03 – Reserva confirmada (Escenario 1)",
-    unavailable: "04 – Vehículo no disponible (Escenario 2)",
+    detail: "02 – Detalle y reservar",
+    confirmed: "03 – Reserva confirmada",
+    unavailable: "04 – Vehículo no disponible",
   };
  
   return (
@@ -31,11 +31,28 @@ export default function UVMove() {
  
         {/* Vistas navegables */}
         <div className="uvm-screen-wrap">
-          {screen === "explore" && <ExploreScreen navigate={setScreen} />}
-          {screen === "detail" && <DetailScreen navigate={setScreen} />}
-          {screen === "detail-scooter" && <ScooterDetailScreen navigate={setScreen} />}
-          {screen === "confirmed" && <ConfirmedScreen navigate={setScreen} />}
-          {screen === "unavailable" && <UnavailableScreen navigate={setScreen} />}
+          {screen === "explore" && (
+            <ExploreScreen
+              navigate={setScreen}
+              onSelectVehicle={(vehicle) => {
+                setSelectedVehicle(vehicle);
+                setScreen("detail");
+              }}
+            />
+          )}
+          {screen === "detail" && (
+            <DetailScreen
+              navigate={setScreen}
+              vehicle={selectedVehicle}
+              userId={session.user.id}
+              onReserved={(createdReservation) => {
+                setReservation(createdReservation);
+                setScreen("confirmed");
+              }}
+            />
+          )}
+          {screen === "confirmed" && <ConfirmedScreen navigate={setScreen} vehicle={selectedVehicle} reservation={reservation} />}
+          {screen === "unavailable" && <UnavailableScreen navigate={setScreen} vehicle={selectedVehicle} />}
         </div>
       </div>
  

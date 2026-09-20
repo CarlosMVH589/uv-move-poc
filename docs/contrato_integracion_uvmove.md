@@ -32,5 +32,5 @@ Este documento define los acuerdos de integración entre la capa de persistencia
 ---
 
 ## 3. Mapeo de Identidad (Supabase Auth ↔ Db2)
-- El campo `id_usuario` en la tabla `reservaciones` está diseñado para recibir los UUIDs generados automáticamente por Supabase Auth en el panel de administración (ej. `25ecdc1a-f56a-455c-8077-b28ed9fef3a`).
+- El campo `id_usuario` en la tabla `reservaciones` está diseñado para recibir los UUIDs generados automáticamente por Supabase Auth en el panel de administración (ej. `25ecdc1a-f56a-455c-8077-b28ed9fef3aa`).
 - Cualquier consulta o inserción realizada desde el frontend que involucre a un usuario deberá suministrar este identificador exacto.

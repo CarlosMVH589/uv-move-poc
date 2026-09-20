@@ -1,7 +1,35 @@
+import { useEffect, useState } from "react";
 import { IconUser, IconSearch, IconBike, IconScooter, IconPin } from "../components/Icons";
 import { BottomNav } from "../components/LayoutComponents";
+import { supabase } from "../services/supabaseClient";
+import { getAvailableVehicles } from "../services/uvMoveApi";
 
-export default function ExploreScreen({ navigate }) {
+function VehicleIcon({ type, size = 40 }) {
+  return type.toLowerCase().includes("scooter")
+    ? <IconScooter size={size} color="#1a4fa0" />
+    : <IconBike size={size} color="#1a4fa0" />;
+}
+
+function isAvailable(vehicle) {
+  return vehicle.estado_operativo.toUpperCase() === "DISPONIBLE";
+}
+
+export default function ExploreScreen({ navigate, onSelectVehicle }) {
+  const [vehicles, setVehicles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    getAvailableVehicles()
+      .then(setVehicles)
+      .catch(() => setErrorMessage("No se pudo cargar el catálogo de vehículos."))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  async function handleSignOut() {
+    await supabase?.auth.signOut();
+  }
+
   return (
     <div className="uvm-explore">
       <header className="uvm-header">
@@ -9,9 +37,15 @@ export default function ExploreScreen({ navigate }) {
           <span className="uvm-logo-uv">UV</span>
           <span className="uvm-logo-move"> MOVE</span>
         </div>
-        <div className="uvm-user-icon">
+        <button
+          className="uvm-user-icon"
+          type="button"
+          onClick={handleSignOut}
+          aria-label="Cerrar sesión"
+          title="Cerrar sesión"
+        >
           <IconUser size={20} color="#1a4fa0" />
-        </div>
+        </button>
       </header>
 
       <div className="uvm-explore__content">
@@ -22,63 +56,41 @@ export default function ExploreScreen({ navigate }) {
 
         <div className="uvm-search">
           <IconSearch />
-          <span className="uvm-search__placeholder">Buscar vehículo...</span>
+          <span className="uvm-search__placeholder">Vehículos disponibles</span>
         </div>
 
         <p className="uvm-section-label">VEHÍCULOS CERCA</p>
 
+        {errorMessage && <p className="uvm-api-error">{errorMessage}</p>}
+        {isLoading && <p className="uvm-api-state">Cargando vehículos...</p>}
+        {!isLoading && !errorMessage && vehicles.length === 0 && <p className="uvm-api-state">No hay vehículos registrados.</p>}
         <div className="uvm-cards-list">
-          {/* BICICLETA #B102 — Flujo Exitoso */}
-          <div className="uvm-vehicle-card">
-            <div className="uvm-vehicle-card__top">
-              <div className="uvm-vehicle-card__icon-wrap">
-                <IconBike size={40} color="#1a4fa0" />
-              </div>
-              <div className="uvm-vehicle-card__info">
-                <p className="uvm-vehicle-card__name">BICICLETA #B102</p>
-                <div className="uvm-vehicle-card__status-row">
-                  <span className="uvm-status-dot uvm-status-dot--green uvm-status-dot--sm" />
-                  <span className="uvm-status-label--green">DISPONIBLE</span>
+          {vehicles.map((vehicle) => (
+            <div className="uvm-vehicle-card" key={vehicle.id_vehiculo}>
+              <div className="uvm-vehicle-card__top">
+                <div className="uvm-vehicle-card__icon-wrap">
+                  <VehicleIcon type={vehicle.tipo} />
                 </div>
-                <div className="uvm-vehicle-card__location">
-                  <IconPin size={13} color="#64748b" />
-                  <span>Estación Central</span>
+                <div className="uvm-vehicle-card__info">
+                  <p className="uvm-vehicle-card__name">{vehicle.tipo} · {vehicle.id_vehiculo}</p>
+                  <div className="uvm-vehicle-card__status-row">
+                    <span className={`uvm-status-dot ${isAvailable(vehicle) ? "uvm-status-dot--green" : "uvm-status-dot--orange"} uvm-status-dot--sm`} />
+                    <span className={isAvailable(vehicle) ? "uvm-status-label--green" : "uvm-status-label--orange"}>{vehicle.estado_operativo}</span>
+                  </div>
+                  <div className="uvm-vehicle-card__location">
+                    <IconPin size={13} color="#64748b" />
+                    <span>Batería: {vehicle.nivel_bateria}%</span>
+                  </div>
                 </div>
               </div>
+              <button
+                className="uvm-btn-primary uvm-btn-primary--card"
+                onClick={() => onSelectVehicle(vehicle)}
+              >
+                VER DETALLE
+              </button>
             </div>
-            <button
-              className="uvm-btn-primary uvm-btn-primary--card"
-              onClick={() => navigate("detail")}
-            >
-              VER DETALLE
-            </button>
-          </div>
-
-          {/* SCOOTER #S205 — Flujo Rechazo RN3 */}
-          <div className="uvm-vehicle-card">
-            <div className="uvm-vehicle-card__top">
-              <div className="uvm-vehicle-card__icon-wrap">
-                <IconScooter size={40} color="#1a4fa0" />
-              </div>
-              <div className="uvm-vehicle-card__info">
-                <p className="uvm-vehicle-card__name">SCOOTER #S205</p>
-                <div className="uvm-vehicle-card__status-row">
-                  <span className="uvm-status-dot uvm-status-dot--green uvm-status-dot--sm" />
-                  <span className="uvm-status-label--green">DISPONIBLE</span>
-                </div>
-                <div className="uvm-vehicle-card__location">
-                  <IconPin size={13} color="#64748b" />
-                  <span>Estación Norte</span>
-                </div>
-              </div>
-            </div>
-            <button
-              className="uvm-btn-primary uvm-btn-primary--card"
-              onClick={() => navigate("detail-scooter")}
-            >
-              VER DETALLE
-            </button>
-          </div>
+          ))}
         </div>
       </div>
 
